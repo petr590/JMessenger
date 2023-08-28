@@ -1,0 +1,24 @@
+body {
+	margin: 0;
+}
+
+#main {
+	font-family: sans-serif;
+	margin: 1.2em;
+}
+
+[hidden] {
+	display: none;
+}
+
+
+.status {
+	font-size: 85%;
+	color: #2B8F00;
+	
+}
+
+.status.error {
+	font-weight: bold;
+	color: #C82D42;
+}
