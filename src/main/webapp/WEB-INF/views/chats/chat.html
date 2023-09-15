@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{::link},~{})}">
+	<title th:text="${chat.title}">Title</title>
+	<link rel="stylesheet" href="/style/chats/chat.css">
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<div id="sidebar">
+			<a th:each="chat : ${user.chats}"
+			   class="menu-link" th:text="${chat.title}" th:href="@{/chats/{id}(id=${chat.id})}">Title</a>
+		</div>
+
+		<div id="chat">
+			<div id="chat-header">
+				<h2 class="chat-title" th:text="${chat.title}">Title</h2>
+				<p class="chat-description" th:text="${chat.description}">Description</p>
+			</div>
+
+			<!-- Не ставить отступы или новые строки внутри элемента,
+			     так как иначе не будет работать css-свойство empty -->
+			<div id="chat-content"><div class="message" th:each="message : ${chat.messages}" th:object="${message}">
+				<div class="message-author" th:text="*{author.username}"></div>
+				<div class="message-text" th:text="*{text}"></div>
+			</div></div>
+		</div>
+	</main>
+</body>
+</html>

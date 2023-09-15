@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<head th:fragment="head(title,links,scripts)">
+	<meta charset="UTF-8">
+	<title th:replace="${title}">JMessenger</title>
+
+	<link rel="stylesheet" href="/style/common.css">
+	<link rel="stylesheet" href="/style/form.css">
+	<link rel="stylesheet" href="/style/main.css">
+	<link rel="icon" href="/image/icon.png">
+
+	<th:block th:replace="${links}"/>
+	<th:block th:replace="${scripts}"/>
+</head>
+<body>
+	<header th:fragment="header">
+		<link rel="stylesheet" href="/style/header.css">
+
+		<nav id="header-nav">
+			<a id="header-logo" href="/">JMessenger</a>
+			<div sec:authorize="isAnonymous()"><a class="menu-link header-nav-element" href="/register">Зарегистрироваться</a></div>
+			<div sec:authorize="isAnonymous()"><a class="menu-link header-nav-element" href="/login">Войти</a></div>
+			<div sec:authorize="isAuthenticated()"><a class="menu-link header-nav-element" href="/user">Профиль</a></div>
+			<div sec:authorize="isAuthenticated()"><a class="menu-link header-nav-element" href="/chats">Чаты</a></div>
+			<div sec:authorize="isAuthenticated()"><a class="menu-link header-nav-element" href="/logout">Выйти</a></div>
+		</nav>
+	</header>
+
+	<!--<footer th:fragment="footer">
+		&lt;!&ndash;<link rel="stylesheet" href="/style/footer.css">&ndash;&gt;
+		Подвал XD
+	</footer>-->
+</body>
+</html>

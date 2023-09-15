@@ -1,0 +1,35 @@
+header {
+    background-color: var(--header-background-color);
+    color: var(--header-text-color);
+}
+
+header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#header-nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+#header-logo {
+	display: flex;
+
+    margin-right: auto;
+
+    font-size: 1.8em;
+    padding: 0.24em 0.5em 0.3em 0.5em;
+
+    cursor: pointer;
+}
+
+
+.header-nav-element {
+    transition: all 0.25s;
+}
+
+.header-nav-element:hover {
+    background-color: var(--header-background-hover-color);
+}

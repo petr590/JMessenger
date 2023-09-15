@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head(_,~{},~{})}"></head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<form class="centered-form" th:method="post" th:action="@{/authentication}" th:object="${user}">
+			<h3>Войти</h3>
+
+			<input th:field="*{username}" type="text" placeholder="Логин">
+
+			<input th:field="*{password}" type="password" placeholder="Пароль">
+
+			<input type="submit" value="Готово">
+
+			<div th:if="${param.keySet().contains('error')}" class="error small">
+				Неверное имя пользователя или пароль
+			</div>
+
+			<p class="small">Ещё не зарегистрированы? <a href="/register">Создать аккаунт</a></p>
+		</form>
+	</main>
+</body>
+</html>

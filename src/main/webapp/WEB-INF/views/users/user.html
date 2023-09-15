@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{},~{})}">
+	<title th:text="${'Профиль пользователя ' + user.username}">Профиль пользователя USERNAME</title>
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<div class="centered-form">
+			<h3>Профиль:</h3>
+			<span th:text="${user.username + ', ' + user.role.name}">USERNAME, ROLE</span>
+		</div>
+	</main>
+</body>
+</html>

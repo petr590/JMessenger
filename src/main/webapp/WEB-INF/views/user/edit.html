@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{},~{})}">
+	<title th:text="${user.username + ' - Редактировать профиль'}">USERNAME - Редактировать профиль</title>
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<form class="centered-form" th:method="patch" th:action="@{/user/edit}" th:object="${user}">
+			<h3>Профиль:</h3>
+
+			<input th:field="*{username}" th:errorclass="error"
+			       type="text" placeholder="Логин">
+
+			<input type="submit" value="Сохранить">
+
+			<a href="/user/new-password">Изменить пароль</a>
+
+			<a href="/user">Назад</a>
+
+			<a href="/user/delete">Удалить страницу</a>
+		</form>
+	</main>
+</body>
+</html>

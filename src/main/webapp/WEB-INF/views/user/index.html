@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://thymeleaf.org" xmlns:sec="http://thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{::link},~{})}">
+	<title th:text="${user.username + ' - JMessenger'}">USERNAME - JMessenger</title>
+	<link rel="stylesheet" href="/style/user.css">
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<div class="centered-form">
+			<h3>Профиль:</h3>
+
+			<span th:text="${user.username + ', ' + user.role.name}">USERNAME, ROLE</span>
+
+			<a href="/user/edit">Редактировать</a>
+
+			<div sec:authorize="isAuthenticated()">
+				<a href="/logout">Выйти</a>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

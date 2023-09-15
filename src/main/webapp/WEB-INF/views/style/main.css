@@ -1,0 +1,61 @@
+/* Green theme */
+:root {
+	--border-color: #4f9300;
+	--background-color: white;
+	--text-color: black;
+
+	--header-text-color: white;
+	--header-background-color: #80c440;
+	--header-background-hover-color: #5fa31c;
+	
+	--user-text-color: inherit;
+	
+	--message-background-color: var(--header-background-color);
+	--message-text-color: var(--header-text-color);
+
+	--error-color: #a02114;
+	--error-border-color: #c64639;
+	
+	font-family: sans-serif;
+}
+
+/*:root {
+	--border-color: #4f9300;
+	--background-color: black;
+	--text-color: white;
+
+	--header-text-color: white;
+	--header-background-color: #80c440;
+	--header-background-hover-color: #5fa31c;
+	
+	--user-text-color: lightgray;
+	
+	--message-background-color: var(--header-background-color);
+	--message-text-color: var(--header-text-color);
+
+	--error-color: #a02114;
+	--error-border-color: #c64639;
+	
+	font-family: sans-serif;
+}*/
+
+
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+	margin: 0;
+	
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+main {
+	margin: 1.2em;
+	flex-grow: 1;
+	
+	background-color: var(--background-color);
+	color: var(--text-color);
+}

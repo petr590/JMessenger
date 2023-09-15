@@ -1,0 +1,21 @@
+.error {
+    color: var(--error-color);
+}
+
+[hidden] {
+	display: none;
+}
+
+.small {
+	font-size: 0.75em;
+}
+
+.centered {
+	width: max-content;
+	margin: auto;
+}
+
+.menu-link {
+	display: block;
+	padding: 1em;
+}

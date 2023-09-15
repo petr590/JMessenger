@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{},~{})}">
+	<title>Чаты</title>
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<div th:each="chat : ${chats}">
+			<a th:href="@{/chats/{id}(id=${chat.id})}" th:text="${chat.title}"></a>
+		</div>
+	</main>
+</body>
+</html>

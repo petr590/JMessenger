@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{::link},~{})}">
+	<title th:text="${user.username + ' - Редактировать профиль'}">USERNAME - Редактировать профиль</title>
+	<link rel="stylesheet" href="/style/user/delete.css">
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<form class="centered-form" th:method="delete" th:action="@{/user}">
+			<p>Вы действительно хотите удалить страницу?</p>
+
+			<div class="submit-delete">
+				<input type="submit" value="Удалить">
+				<input type="button" value="Назад" onclick="window.location = '/user/edit'">
+			</div>
+		</form>
+	</main>
+</body>
+</html>

@@ -1,14 +1,20 @@
 package x590.jmessenger.service;
 
-import org.springframework.stereotype.Service;
-import x590.jmessenger.entities.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.validation.BindingResult;
+import x590.jmessenger.entity.User;
 
-import java.util.Optional;
+import java.util.List;
 
-@Service
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-	Optional<User> findById(int id);
+	User findUserById(int id);
 
-	boolean updateById(int userId, User user);
+	List<User> getUsers();
+
+	boolean saveUser(User user, BindingResult bindingResult);
+
+	void updateUser(User existingUser, User newUserData);
+
+	void deleteUser(User user);
 }

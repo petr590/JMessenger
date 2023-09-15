@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{},~{})}">
+	<title th:text="|Ошибка ${httpStatus.value}|">Ошибка 404</title>
+</head>
+<body>
+	<header th:replace="~{base :: header}"></header>
+
+	<main>
+		<div class="centered-form">
+			<h2 th:text="|${httpStatus.value} ${httpStatus.reasonPhrase}|">404 Not Found</h2>
+			<p th:utext="${errorMessage}">Something not found</p>
+			<a href="/">На главную страницу</a>
+		</div>
+	</main>
+</body>
+</html>

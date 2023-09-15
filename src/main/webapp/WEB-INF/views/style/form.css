@@ -1,0 +1,26 @@
+input, button {
+	padding: 0.5em;
+}
+
+.centered-form {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	width: max-content;
+	margin: auto;
+	
+	border: 1px solid var(--border-color);
+	border-radius: 1em;
+	
+	padding: 1em;
+}
+
+.centered-form > * {
+	margin: 1em;
+}
+
+input.error {
+    color: inherit;
+    border: thin solid var(--error-border-color);
+    box-shadow: 0 0 1px var(--error-border-color);
+}

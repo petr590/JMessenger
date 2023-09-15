@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{base :: head(~{::title},~{},~{})}">
+	<title>Список пользователей</title>
+</head>
+<body>
+	<main>
+		<div th:each="user : ${users}">
+			<a th:text="${user.username}" th:href="@{/users/{id}(id=${user.id})}"></a>
+		</div>
+	</main>
+</body>
+</html>
