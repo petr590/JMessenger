@@ -3,15 +3,16 @@ package x590.jmessenger.controllers;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
+@Controller
 @ControllerAdvice
-public class ErrorController {
+@RequestMapping("/error")
+public class ExceptionController {
 
-	@ExceptionHandler({UsernameNotFoundException.class, EntityNotFoundException.class})
+	@ExceptionHandler({ UsernameNotFoundException.class, EntityNotFoundException.class })
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public String usernameNotFoundException(RuntimeException exception, Model model) {
 		model.addAttribute("httpStatus", HttpStatus.NOT_FOUND);
@@ -22,8 +23,15 @@ public class ErrorController {
 	@ExceptionHandler(Throwable.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public String exception(Throwable exception, Model model) {
+		exception.printStackTrace();
 		model.addAttribute("httpStatus", HttpStatus.INTERNAL_SERVER_ERROR);
 		model.addAttribute("errorMessage", exception.getMessage());
 		return "error.html";
+	}
+
+	@GetMapping("/403")
+	public String error(Model model) {
+		model.addAttribute("httpStatus", HttpStatus.FORBIDDEN);
+		return "error";
 	}
 }
