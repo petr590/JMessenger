@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<head th:fragment="head(title,link,script)">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title th:replace="${title}">JMessenger</title>
+	<link rel="icon" th:href="@{/image/icon.png}">
+
+	<style th:inline="css">
+		:root { --picture-change-message: '[[#{picture.change}]]' }
+	</style>
+	<th:block th:replace="${style} == null ? ~{} : ${style}"/>
+
+	<link rel="stylesheet" th:href="@{/style/reset.css}">
+	<link rel="stylesheet" th:href="@{/style/main.css}">
+	<link rel="stylesheet" th:href="@{/style/form.css}">
+	<link rel="stylesheet" th:href="@{/style/list.css}">
+	<link rel="stylesheet" th:href="@{/style/picture.css}">
+	<link rel="stylesheet" th:href="@{/style/button.css}">
+	<link rel="stylesheet" th:href="@{/style/common.css}">
+	<th:block th:replace="${link}"/>
+
+	<script defer src="http://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<th:block th:replace="${script}"/>
+</head>
+<body>
+	<header th:fragment="header">
+		<link rel="stylesheet" th:href="@{/style/header.css}">
+		<script defer th:src="@{/script/header.js}"></script>
+
+		<div id="header-content">
+			<a class="header-logo" th:href="@{/}">JMessenger</a>
+
+			<nav class="header-nav" sec:authorize="isAnonymous()">
+				<a class="menu-item" th:href="@{/register}" th:text="#{header.register}"></a>
+				<a class="menu-item" th:href="@{/login}" th:text="#{header.login}"></a>
+			</nav>
+
+			<nav class="header-nav" sec:authorize="isAuthenticated()">
+				<a class="menu-item" th:href="@{/user}" th:text="#{header.profile}"></a>
+				<a class="menu-item" th:href="@{/chats}" th:text="#{header.chats}"></a>
+				<a class="menu-item" th:href="@{/logout}" th:text="#{header.logout}"></a>
+			</nav>
+
+			<div class="header-burger"><span></span></div>
+		</div>
+	</header>
+</body>
+</html>

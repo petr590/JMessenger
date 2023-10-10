@@ -1,22 +1,20 @@
 package x590.jmessenger.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import x590.jmessenger.entity.Message;
 import x590.jmessenger.repository.MessageRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
 	private final MessageRepository repository;
-
-	@Autowired
-	public MessageServiceImpl(MessageRepository repository) {
-		this.repository = repository;
-	}
 
 	@Override
 	public Message findMessageById(int id) {
@@ -30,15 +28,22 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public boolean saveMessage(Message message) {
-		return false;
+		repository.save(message);
+		return true;
 	}
 
 	@Override
-	public void updateChat(Message existingMessage, Message newMessageData) {
-
+	public void updateMessage(Message message, String newText) {
+		message.setText(newText);
+		repository.save(message);
 	}
 
 	public void delete(Message message) {
 		repository.delete(message);
+	}
+
+	@Override
+	public Set<Message> findMessagesInChatSince(int chatId, Timestamp since) {
+		return repository.findMessagesInChatSince(chatId, since);
 	}
 }

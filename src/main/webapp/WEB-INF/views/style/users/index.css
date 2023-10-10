@@ -1,0 +1,7 @@
+main {
+	display: flex;
+}
+
+.list {
+	border-right: 1px solid var(--border-color);
+}

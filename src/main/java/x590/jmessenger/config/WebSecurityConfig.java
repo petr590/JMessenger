@@ -1,6 +1,7 @@
 package x590.jmessenger.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,18 +9,16 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import x590.jmessenger.service.UserService;
 
 import static x590.jmessenger.entity.RoleNames.*;
-import static x590.jmessenger.config.Resources.*;
 
 @Configuration
 @EnableWebSecurity
@@ -33,23 +32,6 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public UserDetailsService users() {
-		UserDetails user = User.builder()
-				.username("user")
-				.password("{noop}user")
-				.roles(USER)
-				.build();
-
-		UserDetails admin = User.builder()
-				.username("admin")
-				.password("{noop}admin")
-				.roles(USER, ADMIN)
-				.build();
-
-		return new InMemoryUserDetailsManager(user, admin);
-	}
-
-	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -57,39 +39,50 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf(AbstractHttpConfigurer::disable)
-//				.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-//				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		http.csrf(CsrfConfigurer::disable)
 				.authenticationProvider(authenticationProvider())
 
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/register").anonymous()
-						.requestMatchers("/user", "/user/**", "/chats", "/chats/**").authenticated()
-						.requestMatchers("/users", "/users/**").hasAuthority(ADMIN)
-						.requestMatchers(STYLE_PATTERN, SCRIPT_PATTERN, IMAGE_PATTERN).permitAll()
+						.requestMatchers("/register").permitAll()
+						.requestMatchers("/users").hasAuthority(ADMIN)
+						.requestMatchers("/user/**", "/users/**", "/chats/**").authenticated()
 						.anyRequest().permitAll())
 
-				.formLogin(configurer -> configurer
+				.formLogin(formLogin -> formLogin
 						.loginPage("/login")
 						.loginProcessingUrl("/authentication")
 						.defaultSuccessUrl("/")
 						.permitAll())
 
-				.logout(configurer -> configurer
+				.logout(logout -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/")
-						.permitAll());
+						.permitAll())
+
+				.exceptionHandling(configurer -> configurer.accessDeniedPage("/error/403"))
+
+				.sessionManagement(management -> management
+						.maximumSessions(1)
+						.sessionRegistry(sessionRegistry())
+				);
 
 		return http.build();
 	}
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-		var authProvider = new DaoAuthenticationProvider();
-
+		var authProvider = new DaoAuthenticationProvider(passwordEncoder());
 		authProvider.setUserDetailsService(context.getBean(UserService.class));
-		authProvider.setPasswordEncoder(passwordEncoder());
-
 		return authProvider;
+	}
+
+	@Bean
+	public SessionRegistry sessionRegistry() {
+		return new SessionRegistryImpl();
+	}
+
+	@Bean
+	public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+		return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
 	}
 }

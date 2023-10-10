@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-<head th:replace="~{base :: head(~{::title},~{},~{})}">
-	<title th:text="${'Профиль пользователя ' + user.username}">Профиль пользователя USERNAME</title>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(~{::title},~{},~{})}">
+	<title th:text="#{users.profile.of(user.username)}"></title>
 </head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
-	<main>
-		<div class="centered-form">
-			<h3>Профиль:</h3>
-			<span th:text="${user.username + ', ' + user.role.name}">USERNAME, ROLE</span>
+	<main th:object="${user}">
+		<div th:unless="*{deleted}" class="centered-form">
+			<h3 th:text="#{user.profile.title}"></h3>
+			<div th:replace="~{ fragments/form :: large-picture(@{ /users/{id}/picture (id=*{id}) })}"></div>
+			<span th:text="|${user.username}, ${user.role.name}|"></span>
 		</div>
+
+		<div th:if="*{deleted}" class="centered-form" th:text="#{users.profile.deleted}"></div>
 	</main>
 </body>
 </html>

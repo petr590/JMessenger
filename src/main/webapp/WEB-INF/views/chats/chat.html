@@ -1,31 +1,164 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{base :: head(~{::title},~{::link},~{})}">
-	<title th:text="${chat.title}">Title</title>
-	<link rel="stylesheet" href="/style/chats/chat.css">
+<html xmlns:th="http://thymeleaf.org"
+      th:with="isOwner = ${user.id == chat.owner.id}">
+<head th:replace="~{fragments/base :: head(title=~{::title}, link=~{::link}, style=~{::style}, script=~{::script})}">
+	<title th:text="${chat.title}"></title>
+
+	<link rel="stylesheet" th:href="@{/style/chats/chat/chat.css}">
+
+	<style th:inline="css">
+		:root {
+			--loading-message: '[[#{message.loading}]]';
+			--empty-chat-content-message: '[[#{chat.emptyContent}]]';
+			--send-file-message: '[[#{chat.file.send}]]';
+			--chat-description-placeholder: '[[#{form.chat.description}]]'
+		}
+	</style>
+
+	<script defer src="https://unpkg.com/htmx.org@1.9.6"></script>
+	<script defer th:src="@{/script/htmx-config.js}"></script>
+
+	<!-- Порядок загрузки скриптов важен -->
+	<script type="module" th:src="@{/script/common.js}"></script>
+	<script type="module" th:src="@{/script/chats/chat/update.js}"></script>
+	<script type="module" th:src="@{/script/chats/chat/message-contextmenu.js}"></script>
+	<script type="module" th:src="@{/script/chats/chat/new-message.js}"></script>
+	<script type="module" th:src="@{/script/chats/chat/settings.js}"></script>
+	<script type="module" th:src="@{/script/chats/chat/picture-overlay.js}"></script>
+
+	<th:block th:if="${isOwner}">
+		<script defer th:src="@{/script/picture-upload.js}"></script>
+		<script defer th:src="@{/script/chats/chat/edit-settings.js}"></script>
+	</th:block>
 </head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
-	<main>
-		<div id="sidebar">
-			<a th:each="chat : ${user.chats}"
-			   class="menu-link" th:text="${chat.title}" th:href="@{/chats/{id}(id=${chat.id})}">Title</a>
+	<main th:object="${chat}"
+	      th:with="chatUrl = @{ /chats/{id} (id=*{id}) },
+			       pictureUrl = @{ /chats/{id}/picture (id=*{id}) }">
+
+		<div th:replace="~{fragments/list :: chats(chats = ${user.chats}, title = null, items = ~{::#new-chat-form})}">
+			<form id="new-chat-form" class="list-item-wrapper" th:action="@{/chats/new}">
+				<input class="list-item no-border" type="submit" th:value="#{chat.new}">
+			</form>
 		</div>
 
-		<div id="chat">
-			<div id="chat-header">
-				<h2 class="chat-title" th:text="${chat.title}">Title</h2>
-				<p class="chat-description" th:text="${chat.description}">Description</p>
+		<div id="chat-header">
+			<div th:replace="~{fragments/form :: big-picture(${pictureUrl})}"></div>
+			<h2 class="chat-title" th:text="*{title}">Title</h2>
+			<a class="members-count" href="#" th:text="#{chat.members(*{members.size()})}"></a>
+		</div>
+
+		<div id="warning" class="close-button-on-top-right">
+			<div class="warning-content"></div>
+			<button class="close-button"></button>
+		</div>
+
+		<!-- Не ставить отступы или новые строки внутри элемента,
+		     так как иначе не будет работать css-свойство ':empty' -->
+		<div id="chat-content" data-loading></div>
+
+
+		<div id="chat-settings">
+			<div id="chat-settings-content" class="list close-button-on-top-right">
+				<button class="close-button big"></button>
+
+				<div th:if="${isOwner}" class="list-item chat-info">
+					<div th:replace="~{fragments/form :: picture-template(${pictureUrl}, 'large-picture uploadable-picture', ~{::#chat-picture-input})}">
+						<input hidden id="chat-picture-input" class="picture-input"
+						       name="pictureFile" type="file" accept="image/*"
+						       th:hx-patch="${chatUrl}" hx-trigger="input" hx-encoding="multipart/form-data"
+						       hx-target="next .errors" hx-swap="innerHTML">
+					</div>
+					<div class="errors"></div>
+
+					<div th:replace="~{chats/chat/title :: fragment}"></div>
+					<div th:replace="~{chats/chat/description :: fragment}"></div>
+				</div>
+
+				<div th:unless="${isOwner}" class="list-item chat-info">
+					<div th:replace="~{fragments/form :: large-picture(${pictureUrl})}"></div>
+
+					<h3 class="chat-title" th:text="*{title}"></h3>
+					<p class="chat-description" th:text="*{description}"></p>
+				</div>
+
+
+				<h3 class="list-item list-title" th:text="#{chat.members.title}"></h3>
+
+				<div th:each="user : *{members}" th:object="${user}" class="list-item">
+					<div th:replace="~{fragments/form :: picture(@{ /users/{id}/picture (id=*{id}) })}"></div>
+					<a th:href="@{ /users/{id} (id=*{id}) }" th:text="*{username}"></a>
+					<span th:if="${user.id == chat.owner.id}" th:text="#{notice.userIsAdmin}"></span>
+				</div>
+
+
+				<form th:if="${isOwner}" class="list-item-wrapper"
+				      th:method="delete" th:action="${chatUrl}"
+				      th:onsubmit="|return confirm('#{chat.delete.confirm}')|">
+					<input type="submit" class="list-item no-border unsafe" th:value="#{chat.delete}">
+				</form>
+				<form th:unless="${isOwner}" class="list-item-wrapper"
+				      th:method="post" th:action="|${chatUrl}/leave|">
+					<input type="submit" class="list-item no-border unsafe" th:value="#{chat.logout}">
+				</form>
+			</div>
+		</div>
+
+
+		<div id="new-message">
+			<div hidden class="new-message-top" data-for-action="edit">
+				<span class="notice" th:text="#{chat.message.editing}"></span>
+				<button class="close-button"></button>
+			</div>
+			<div hidden class="new-message-top" data-for-action="reply">
+				<div class="replying-message-container">
+					<div class="replying-message-owner ellipsis"></div>
+					<span class="message-reply-icon"></span>
+					<div class="replying-message-content ellipsis"></div>
+					<div class="replying-message-file"></div>
+				</div>
+				<button class="close-button"></button>
 			</div>
 
-			<!-- Не ставить отступы или новые строки внутри элемента,
-			     так как иначе не будет работать css-свойство empty -->
-			<div id="chat-content"><div class="message" th:each="message : ${chat.messages}" th:object="${message}">
-				<div class="message-author" th:text="*{author.username}"></div>
-				<div class="message-text" th:text="*{text}"></div>
-			</div></div>
+			<textarea id="new-message-text" rows="1" placeholder=""></textarea>
+			<button id="submit-new-message" disabled>&#10146;</button>
 		</div>
+
+		<div id="message-contextmenu-overlay" hidden></div>
+		<ul id="message-contextmenu" hidden>
+			<li data-action="reply"  th:text="#{chat.message.reply}"></li>
+			<li data-action="edit"   th:text="#{chat.message.edit}"></li>
+			<li data-action="copy"   th:text="#{chat.message.copy}"></li>
+			<li data-action="delete" th:text="#{chat.message.delete}"></li>
+		</ul>
 	</main>
+
+
+	<div hidden id="picture-popup" class="popup close-button-on-top-right">
+		<button class="close-button"></button>
+		<img class="popup-content">
+	</div>
+
+	<!-- Различные элементы данных, используемые скриптами -->
+	<div hidden id="data">
+		<!-- Локализация -->
+		<div class="message-edited-notice notice" th:text="#{chat.message.edited}"></div>
+		<div class="message-deleted-notice notice" th:text="#{chat.message.deleted}"></div>
+
+		<div class="network-error-message" th:text="#{warning.networkError}"></div>
+		<div class="file-too-big-message"
+		     data-th-max-file-size="${maxFileSize.toBytes()}"
+		     th:text="#{error.fileTooBig(${@environment.getProperty('spring.servlet.multipart.max-file-size')})}"></div>
+
+		<div class="today-message" th:text="#{date.today}"></div>
+		<div class="yesterday-message" th:text="#{date.yesterday}"></div>
+
+		<!-- Иконки -->
+		<img class="audio-file-icon" th:src="@{/image/file-icon/audio.svg}">
+		<img class="video-file-icon" th:src="@{/image/file-icon/video.svg}">
+		<img class="file-icon"       th:src="@{/image/file-icon/file.svg}">
+	</div>
 </body>
 </html>

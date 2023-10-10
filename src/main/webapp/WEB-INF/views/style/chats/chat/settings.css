@@ -1,0 +1,65 @@
+#chat-settings {
+	overflow: hidden;
+}
+
+#chat-settings-content {
+	width: var(--chat-settings-width);
+}
+
+.chat-info {
+	flex-flow: column nowrap;
+}
+
+.chat-info .errors {
+	font-size: var(--small-font-size);
+}
+
+
+.chat-info > .text-data {
+	align-self: stretch;
+
+	display: grid;
+	
+	grid-template-columns: 1fr repeat(3, auto);
+	
+	grid-template-areas:
+			'first done close edit'
+			'errors errors errors errors';
+}
+
+.chat-info > .text-data > * {
+	margin-left: 0.5em; /* gap */
+}
+
+.chat-info > .text-data > :first-child,
+.chat-info > .text-data > .errors {
+	margin-left: 0;
+}
+
+.chat-info > .text-data > :first-child {
+	grid-area: first;
+	min-width: 0;
+	margin: 0;
+}
+
+.chat-info > .text-data > .done-button {
+	grid-area: done;
+}
+
+.chat-info > .text-data > .close-button {
+	grid-area: close;
+}
+
+.chat-info > .text-data > .edit-button {
+	grid-area: edit;
+}
+
+.chat-info > .text-data > .errors {
+	grid-area: errors;
+}
+
+.chat-info > .text-data > .chat-description:empty::before {
+	content: var(--chat-description-placeholder);
+	font-style: italic;
+	color: var(--placeholder-color);
+}

@@ -1,0 +1,10 @@
+#warning {
+	overflow: hidden;
+	color: var(--warning-text-color);
+	background-color: var(--warning-background-color);
+}
+
+#warning > .warning-content {
+	padding: 0.5em;
+	font-size: var(--small-font-size);
+}

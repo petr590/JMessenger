@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-<head th:replace="~{base :: head(~{::title},~{},~{})}">
-	<title>Список пользователей</title>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(~{::title},~{::link},~{})}">
+	<title th:text="#{users.list.title}"></title>
+
+	<link rel="stylesheet" th:href="@{/style/users/index.css}">
 </head>
 <body>
+	<header th:replace="~{fragments/base :: header}"></header>
+
 	<main>
-		<div th:each="user : ${users}">
-			<a th:text="${user.username}" th:href="@{/users/{id}(id=${user.id})}"></a>
-		</div>
+		<div th:replace="~{fragments/list :: users(${users}, #{users.list})}"></div>
 	</main>
 </body>
 </html>

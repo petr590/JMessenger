@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Form templates</title>
+</head>
+<body>
+	<div th:fragment="items-template(entities, path, name, elements)"
+	     th:each="entity : ${entities}" th:object="${entity}" class="list-item">
+
+		<div th:replace="~{fragments/form :: picture(@{ /{path}/{id}/picture (path=${path}, id=*{id}) })}"></div>
+		<a th:href="@{ /{path}/{id} (path=${path}, id=*{id}) }" th:text="*{__${name}__}"></a>
+
+		<th:block th:replace="${elements} == null ? ~{} : ${elements}"/>
+	</div>
+
+	<div th:fragment="list-template(entities, path, name, id, classappend, title, items, elements)"
+	     th:id="${id == null ? _ : id}" class="list" th:classappend="${classappend}">
+
+		<h3 th:if="${title != null}" th:text="${title}" class="list-item list-title"></h3>
+
+		<div th:replace="~{::items-template(${entities}, ${path}, ${name}, ${elements})}"></div>
+
+		<th:block th:replace="${items} == null ? ~{} : ${items}"/>
+	</div>
+
+	<div th:fragment="chats(chats, title)"
+	     th:replace="~{::list-template(${chats}, 'chats', 'title', ${id}, 'chat-list', ${title}, ${items}, ${elements})}"></div>
+
+	<div th:fragment="users(users, title)"
+	     th:replace="~{::list-template(${users}, 'users', 'username', ${id}, _, ${title}, ${items}, ${elements})}"></div>
+
+	<div th:fragment="user-items(users)"
+	     th:replace="~{::items-template(${users}, 'users', 'username', ${elements})}"></div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+#new-message {
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.new-message-top {
+	width: 100%;
+	padding: 0.5em;
+	background-color: var(--dark-color);
+	color: var(--text-color-on-background);
+	
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.new-message-top > .close-button {
+	margin-left: auto;
+}
+
+
+.replying-message-container {
+	display: grid;
+	row-gap: 0.5em;
+	column-gap: 1em;
+	
+	grid-template-columns: minmax(1rem, auto) minmax(3rem, 1fr) auto;
+	grid-template-areas:
+			'owner owner file'
+			'reply content file';
+}
+
+.replying-message-owner {
+	grid-area: owner;
+}
+
+.replying-message-content {
+	grid-area: content;
+}
+
+.replying-message-content .message-text {
+	max-height: 1.2em;
+	word-wrap: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.replying-message-file {
+	grid-area: file;
+	min-width: 0;
+	overflow: hidden;
+	height: 3em;
+}
+
+.replying-message-file > * {
+	height: 100%;
+}
+
+.replying-message-file > [class*='file-icon'] {
+	filter: var(--on-background-color-filter);
+}
+
+.replying-message-content .message-reply-icon {
+	grid-area: reply;
+}
+
+
+#new-message-text {
+	margin: 0;
+	padding: 0.75em;
+	flex-grow: 1;
+	
+	resize: none;
+	border: none;
+	outline: none;
+	box-shadow: none;
+}
+
+#submit-new-message {
+	height: max-content;
+	padding: 0.25em 0.5em;
+	margin: 0.2em;
+	
+	font-size: var(--big-font-size);
+	background-color: var(--light-color);
+	color: var(--text-color-on-background);
+	border: none;
+	border-radius: 25%;
+	
+	cursor: pointer;
+}
+
+#submit-new-message:active {
+	background-color: var(--dark-color);
+}
+
+#submit-new-message:disabled {
+	background-color: var(--disabled-element-color);
+}
+

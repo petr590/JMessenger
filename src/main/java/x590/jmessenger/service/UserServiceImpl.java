@@ -1,12 +1,12 @@
 package x590.jmessenger.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import x590.jmessenger.entity.Role;
 import x590.jmessenger.entity.User;
 import x590.jmessenger.repository.UserRepository;
@@ -14,17 +14,13 @@ import x590.jmessenger.repository.UserRepository;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-	private final UserRepository userRepository;
+	private final UserRepository repository;
 
 	private final PasswordEncoder encoder;
 
-	@Autowired
-	public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
-		this.userRepository = userRepository;
-		this.encoder = encoder;
-	}
 
 	/**
 	 * @return Пользователя с именем {@code username}.
@@ -32,7 +28,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		User user = userRepository.findByUsername(username);
+		User user = repository.findByUsername(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
@@ -47,22 +43,20 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User findUserById(int id) {
-		return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
 	}
 
 	@Override
 	public List<User> getUsers() {
-		return userRepository.findAll();
+		return repository.findAll();
 	}
 
 	@Override
 	public boolean saveUser(User user, BindingResult bindingResult) {
-		if (userRepository.existsByUsername(user.getUsername())) {
-			bindingResult.addError(new ObjectError("username", "Пользователь с таким именем уже существует"));
-			return false;
-		}
+		checkUsername(user, bindingResult);
+		user.checkPasswords(bindingResult);
 
-		if (!user.checkPasswords(bindingResult)) {
+		if (bindingResult.hasErrors()) {
 			return false;
 		}
 
@@ -70,19 +64,43 @@ public class UserServiceImpl implements UserService {
 		user.setRole(Role.USER);
 		user.encodePassword(encoder);
 		user.setRepeatedPassword(null);
-		userRepository.save(user);
+		repository.save(user);
 		return true;
 	}
 
 	@Override
-	public void updateUser(User existingUser, User newUserData) {
+	public void updateUser(User user) {
+		repository.save(user);
+	}
+
+	@Override
+	public boolean updateUser(User existingUser, User newUserData, BindingResult bindingResult) {
+		var username = newUserData.getUsername();
+
+		if (username != null && !existingUser.getUsername().equals(username)) {
+			checkUsername(newUserData, bindingResult);
+
+			if (bindingResult.hasErrors()) {
+				return false;
+			}
+		}
+
 		newUserData.encodePassword(encoder);
 		existingUser.update(newUserData);
-		userRepository.save(existingUser);
+		repository.save(existingUser);
+
+		return true;
+	}
+
+	private void checkUsername(User user, BindingResult bindingResult) {
+		if (repository.existsByUsername(user.getUsername())) {
+			bindingResult.rejectValue("username", "error.user.alreadyExists");
+		}
 	}
 
 	@Override
 	public void deleteUser(User user) {
-		userRepository.delete(user);
+		user.setDeleted(true);
+		repository.save(user);
 	}
 }

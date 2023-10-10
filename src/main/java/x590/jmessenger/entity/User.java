@@ -8,26 +8,29 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
+import java.sql.Blob;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+
+import static x590.jmessenger.util.Util.*;
 
 @Entity
 @Table(name = "users")
 @Getter @Setter @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User implements UserDetails, EntityWithPicture {
 
+	@EqualsAndHashCode.Include
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Size(min = 2, max = 255, message = "Имя должно быть не меньше 2 символов и не больше 255")
+	@Size(min = 2, max = 255, message = "{error.user.invalidLoginLength}")
 	private String username;
 
-	@Size(min = 6, max = 255, message = "Пароль должен быть не меньше 6 символов и не больше 255")
+	@Size(min = 6, max = 255, message = "{error.user.invalidPasswordLength}")
 	private String password;
 
 	@Transient
@@ -36,31 +39,36 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	private Blob picture;
+
+	private boolean deleted;
 
 	@ToString.Exclude
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "chats_members",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "chat_id")
-	)
-	private Set<Chat> chats;
+	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+	private Set<Chat> ownedChats = new HashSet<>();
 
+	@ToString.Exclude
+	@ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+	private Set<Chat> chats = new HashSet<>();
+
+	@Transactional
+	public Set<Chat> getOwnedChats() {
+		return ownedChats;
+	}
+
+	@Transactional
+	public Set<Chat> getChats() {
+		return chats;
+	}
 
 	/**
-	 * Обновляет поля {@link #username} и {@link #password} с переданного объекта,
-	 * если они не равны {@code null}
+	 * Обновляет поля {@link #username}, {@link #password} и {@link #picture}
+	 * с переданного объекта, если они не равны {@code null}
 	 */
 	public void update(User other) {
 		copyFieldIfNotNull(this::setUsername, other::getUsername);
 		copyFieldIfNotNull(this::setPassword, other::getPassword);
-	}
-
-	private <T> void copyFieldIfNotNull(Consumer<T> setter, Supplier<T> getter) {
-		T value = getter.get();
-		if (value != null) {
-			setter.accept(value);
-		}
+		copyFieldIfNotNull(this::setPicture,  other::getPicture);
 	}
 
 	@Override
@@ -98,7 +106,7 @@ public class User implements UserDetails {
 
 	public boolean checkPasswords(BindingResult bindingResult) {
 		if (password == null || !password.equals(repeatedPassword)) {
-			bindingResult.addError(new ObjectError("repeatedPassword", "Пароли не совпадают"));
+			bindingResult.rejectValue("repeatedPassword", "error.user.passwordsDontMatch");
 			return false;
 		}
 

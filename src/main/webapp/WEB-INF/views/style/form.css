@@ -1,26 +1,56 @@
-input, button {
-	padding: 0.5em;
-}
-
 .centered-form {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
 	width: max-content;
-	margin: auto;
+	margin: 2rem auto;
+	padding: 1rem;
 	
 	border: 1px solid var(--border-color);
-	border-radius: 1em;
-	
-	padding: 1em;
+	border-radius: 1rem;
 }
 
 .centered-form > * {
-	margin: 1em;
+	margin: 1rem;
+}
+
+.centered-form .picture,
+.centered-form .uploadable-picture-wrapper {
+	align-self: center;
 }
 
 input.error {
     color: inherit;
     border: thin solid var(--error-border-color);
     box-shadow: 0 0 1px var(--error-border-color);
+}
+
+.placeholder-wrapper {
+	position: relative;
+	display: flex;
+	flex-flow: column;
+	align-items: stretch;
+}
+
+.placeholder {
+	position: absolute;
+	
+	color: var(--placeholder-color);
+	font-size: var(--small-font-size);
+	
+	padding: 0.1rem 0.2rem;
+	border-radius: 0.75rem;
+	overflow: hidden;
+	left: 0.5rem;
+	transform: translateY(0.5rem);
+	transition: 0.2s;
+	
+	cursor: text;
+	user-select: none;
+}
+
+.placeholder-wrapper > .placeholder-target:focus ~ .placeholder,
+.placeholder-wrapper > .placeholder-target:not(:placeholder-shown) ~ .placeholder {
+	transform: translateY(-50%);
+	background-color: var(--background-color);
 }

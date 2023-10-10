@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" th:fragment="html(httpStatus,errorMessage)">
-<head th:replace="~{base :: head(~{::title},~{},~{})}">
-	<title th:text="${httpStatus != null ? 'Ошибка ' + httpStatus.value : 'Неизвестная ошибка'}">Ошибка 404</title>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(~{::title},~{},~{})}">
+	<title th:text="${httpStatus != null} ? #{httpError.error(httpStatus.value)} : #{httpError.unknown}"></title>
 </head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
 	<main>
 		<div class="centered-form">
-			<h2 th:text="${httpStatus != null ? httpStatus.value + ' ' + httpStatus.reasonPhrase : 'Неизвестная ошибка'}">404 Not Found</h2>
-			<p th:if="${errorMessage != null}" th:utext="${errorMessage}">Resource not found</p>
-			<a href="/">На главную страницу</a>
+			<h2 th:if="httpStatus != null" th:text="|${httpStatus.value} ${httpStatus.reasonPhrase}|"></h2>
+			<h2 th:if="httpStatus == null" th:text="#{httpError.unknown}"></h2>
+
+			<p th:if="${messageKey != null}" th:utext="#{__${messageKey}__}"></p>
+
+			<a th:href="@{/}" th:text="#{httpError.toMainPage}"></a>
 		</div>
 	</main>
 </body>

@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{base :: head(_,~{},~{})}"></head>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(_,~{},~{})}"></head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
 	<main>
 		<form class="centered-form" th:method="post" th:action="@{/authentication}" th:object="${user}">
-			<h3>Войти</h3>
+			<h3 th:text="#{login.title}"></h3>
 
-			<input th:field="*{username}" type="text" placeholder="Логин">
+			<div th:replace="~{fragments/form :: username-input}"></div>
+			<div th:replace="~{fragments/form :: password-input}"></div>
 
-			<input th:field="*{password}" type="password" placeholder="Пароль">
+			<div th:replace="~{fragments/form :: submit}"></div>
 
-			<input type="submit" value="Готово">
+			<div th:if="${param.keySet().contains('error')}" class="error small"
+			     th:text="#{error.login.incorrectLoginOrPassword}"></div>
 
-			<div th:if="${param.keySet().contains('error')}" class="error small">
-				Неверное имя пользователя или пароль
-			</div>
-
-			<p class="small">Ещё не зарегистрированы? <a href="/register">Создать аккаунт</a></p>
+			<p class="small">
+				[[#{login.yetNotRegistered}]]
+				<a th:href="@{/register}" th:text="#{login.register}"></a>
+			</p>
 		</form>
 	</main>
 </body>

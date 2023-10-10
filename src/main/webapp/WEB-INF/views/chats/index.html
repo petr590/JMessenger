@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{base :: head(~{::title},~{},~{})}">
-	<title>Чаты</title>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(title=~{::title}, link=~{::link}, style=~{::style}, script=~{::script})}">
+	<title th:text="#{chats.title}"></title>
+
+	<link rel="stylesheet" th:href="@{/style/chats/index.css}">
+
+	<style th:inline="css">
+		:root {
+		    --loading-message: '[[#{message.loading}]]';
+		    --nothing-found-message: '[[#{search.nothingFound}]]';
+		}
+	</style>
+
+	<script type="module" th:src="@{/script/common.js}"></script>
+	<script type="module" th:src="@{/script/chats/index/search.js}"></script>
 </head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
 	<main>
-		<div th:each="chat : ${chats}">
-			<a th:href="@{/chats/{id}(id=${chat.id})}" th:text="${chat.title}"></a>
-		</div>
+		<section id="list-section">
+			<div th:replace="~{fragments/list :: chats(chats=${chats}, title=#{chats.title}, items=~{::#new-chat-form})}">
+				<form id="new-chat-form" class="list-item-wrapper" th:action="@{/chats/new}">
+					<input class="list-item no-border" type="submit" th:value="#{chat.new}">
+				</form>
+			</div>
+		</section>
+
+		<section id="search-section">
+			<form id="search-form" th:action="@{/chats/search}">
+				<input type="search" class="no-border" name="value" th:placeholder="#{chat.searchPlaceholder}">
+				<button type="reset" class="close-button"></button>
+				<button type="submit" class="no-border" th:text="#{search.submit}"></button>
+			</form>
+
+			<div id="search-results" class="list"></div>
+			<button hidden id="search-next" th:text="#{search.submit}"></button>
+		</section>
 	</main>
 </body>
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Form templates</title>
+</head>
+<body>
+	<div th:fragment="picture-template(url, classappend, elements)"
+	     class="picture" th:classappend="${classappend}">
+		<img th:src="${url}">
+		<th:block th:replace="${elements}"/>
+	</div>
+
+	<div th:fragment="picture(url)"
+	     th:replace="~{::picture-template(${url}, _, ~{})}"></div>
+
+	<div th:fragment="big-picture(url)"
+	     th:replace="~{::picture-template(${url}, 'big-picture', ~{})}"></div>
+
+	<div th:fragment="large-picture(url)"
+	     th:replace="~{::picture-template(${url}, 'large-picture', ~{})}"></div>
+
+	<div th:fragment="uploadable-large-picture(url)"
+	     th:replace="~{::picture-template(${url}, 'large-picture uploadable-picture', ~{::.picture-input})}">
+		<input hidden class="picture-input" name="pictureFile" type="file" accept="image/*">
+	</div>
+
+
+
+	<div th:fragment="form-input(fieldname, type, placeholder)" class="placeholder-wrapper">
+		<input class="placeholder-target" th:errorclass="error" th:type="${type}"
+		       th:field="*{__${fieldname}__}" th:id="|${fieldname}-input|" placeholder=""
+		       th:autofocus="${autofocus} ? '' : _">
+		<label class="placeholder" th:for="|${fieldname}-input|" th:text="${placeholder}"></label>
+	</div>
+
+	<div th:fragment="form-textarea(fieldname, placeholder)" class="placeholder-wrapper">
+		<textarea class="placeholder-target" th:errorclass="error"
+		          th:field="*{__${fieldname}__}" th:id="|${fieldname}-input|" placeholder=""
+		          th:autofocus="${autofocus} ? '' : _"></textarea>
+		<label class="placeholder" th:for="|${fieldname}-input|" th:text="${placeholder}"></label>
+	</div>
+
+	<div th:fragment="username-input"
+	     th:replace="~{::form-input('username', 'text', #{form.login})}"></div>
+
+	<div th:fragment="password-input"
+	     th:replace="~{::form-input('password', 'password', #{form.password})}"></div>
+
+	<div th:fragment="new-password-input"
+	     th:replace="~{::form-input('password', 'password', #{form.newPassword})}"></div>
+
+	<div th:fragment="repeated-password-input"
+	     th:replace="~{::form-input('repeatedPassword', 'password', #{form.repeatedPassword})}"></div>
+
+
+	<input th:fragment="submit" type="submit" th:value="#{form.submit}">
+
+	<input th:fragment="save" type="submit" th:value="#{form.save}">
+
+
+	<div th:fragment="all-errors" th:if="${#fields.hasErrors('*')}" class="errors">
+		<div class="error" th:each="error : ${#fields.errors('*')}" th:text="${error}"></div>
+	</div>
+</body>
+</html>

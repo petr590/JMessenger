@@ -1,0 +1,84 @@
+@import '../common.css';
+@import '../header.css';
+@import 'chat-list.css';
+@import 'content.css';
+@import 'messages.css';
+@import 'new-message.css';
+@import 'message-contextmenu.css';
+@import 'settings.css';
+@import 'warning.css';
+
+main {
+	--chat-settings-width: 15rem;
+	--chat-settings-column: 0;
+	
+	--warning-height: 1.75rem;
+	--warning-row: 0;
+	
+	display: grid;
+	
+	grid-template-columns: auto 1fr var(--chat-settings-column);
+	grid-template-rows: auto var(--warning-row) 1fr auto;
+	
+	transition: 0.5s;
+	
+	grid-template-areas:
+			'chat-list header settings'
+			'chat-list warning settings'
+			'chat-list content settings'
+			'chat-list new-message settings';
+	
+	background: var(--border-color);
+	column-gap: 1px;
+	
+	overflow: hidden;
+	position: relative;
+}
+
+main.chat-settings-shown {
+	--chat-settings-column: var(--chat-settings-width);
+}
+
+main.warning-shown {
+	--warning-row: var(--warning-height);
+}
+
+main > * {
+	background: var(--background-color);
+	min-width: 0;
+	min-height: 0;
+}
+
+#chat-content, #warning, #new-message {
+	border-top: 1px solid var(--border-color);
+}
+
+
+.chat-list {
+	grid-area: chat-list;
+}
+
+#chat-header {
+	grid-area: header;
+}
+
+#chat-header .picture {
+	cursor: pointer;
+}
+
+#warning {
+	grid-area: warning;
+}
+
+#new-message {
+	grid-area: new-message;
+}
+
+#chat-settings {
+	grid-area: settings;
+}
+
+#chat-content {
+	grid-area: content;
+}
+

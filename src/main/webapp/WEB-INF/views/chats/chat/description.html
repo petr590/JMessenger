@@ -1,0 +1,6 @@
+<div xmlns:th="http://thymeleaf.org"
+     th:fragment="fragment" th:object="${chat}"
+     class="text-data" hx-target="this" hx-swap="outerHTML">
+	<p class="chat-description" th:text="*{description}"></p>
+	<button class="edit-button" th:hx-get="@{ /chats/{id}/description/edit (id=*{id}) }"></button>
+</div>

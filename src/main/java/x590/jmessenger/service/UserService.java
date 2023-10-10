@@ -14,7 +14,9 @@ public interface UserService extends UserDetailsService {
 
 	boolean saveUser(User user, BindingResult bindingResult);
 
-	void updateUser(User existingUser, User newUserData);
+	void updateUser(User user);
+
+	boolean updateUser(User existingUser, User newUserData, BindingResult bindingResult);
 
 	void deleteUser(User user);
 }

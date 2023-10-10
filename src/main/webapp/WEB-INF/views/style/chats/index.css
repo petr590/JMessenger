@@ -1,0 +1,40 @@
+@import 'common.css';
+
+main {
+	display: flex;
+}
+
+#list-section {
+	border-right: 1px solid var(--border-color);
+}
+
+#search-section {
+	flex-grow: 1;
+	
+	display: flex;
+	flex-flow: column;
+}
+
+
+#search-form {
+	display: flex;
+	align-items: center;
+	gap: 0.2rem;
+	border-bottom: 1px solid var(--border-color);
+}
+
+
+#search-results::after {
+	font-style: italic;
+	text-align: center;
+	margin: 1em 0;
+}
+
+#search-results[data-state=loading]::after {
+	content: var(--loading-message);
+}
+
+#search-results[data-state=loaded]:empty::after {
+	content: var(--nothing-found-message);
+}
+

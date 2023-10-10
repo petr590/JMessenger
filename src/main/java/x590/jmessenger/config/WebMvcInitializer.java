@@ -18,4 +18,10 @@ public class WebMvcInitializer extends AbstractAnnotationConfigDispatcherServlet
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
+
+//	@Override
+//	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+//		System.out.println("customizeRegistration");
+//		registration.setMultipartConfig(new MultipartConfigElement("", 0x200000, 4193304, 0x200000));
+//	}
 }

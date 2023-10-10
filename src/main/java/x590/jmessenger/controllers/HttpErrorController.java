@@ -1,37 +1,32 @@
 package x590.jmessenger.controllers;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@ControllerAdvice
 @RequestMapping("/error")
-public class ExceptionController {
+@AllArgsConstructor
+public class HttpErrorController implements ErrorController {
 
-	@ExceptionHandler({ UsernameNotFoundException.class, EntityNotFoundException.class })
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String usernameNotFoundException(RuntimeException exception, Model model) {
-		model.addAttribute("httpStatus", HttpStatus.NOT_FOUND);
-		model.addAttribute("errorMessage", exception.getMessage());
-		return "error.html";
-	}
+	@GetMapping
+	public String error(HttpServletRequest request, Model model) {
+		int code = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
+				instanceof Integer intStatus ? intStatus : 0;
 
-	@ExceptionHandler(Throwable.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public String exception(Throwable exception, Model model) {
-		exception.printStackTrace();
-		model.addAttribute("httpStatus", HttpStatus.INTERNAL_SERVER_ERROR);
-		model.addAttribute("errorMessage", exception.getMessage());
-		return "error.html";
+		model.addAttribute("httpStatus", HttpStatus.resolve(code));
+		return "error";
 	}
 
 	@GetMapping("/403")
-	public String error(Model model) {
+	public String forbidden(Model model) {
 		model.addAttribute("httpStatus", HttpStatus.FORBIDDEN);
+		model.addAttribute("messageKey", "httpError.message.accessDenied");
 		return "error";
 	}
 }

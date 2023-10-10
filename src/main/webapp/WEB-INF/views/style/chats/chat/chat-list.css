@@ -1,0 +1,12 @@
+.chat-list {
+	max-width: 15rem;
+}
+
+.chat-list > .list-item > .picture {
+	min-width: 2em;
+}
+
+.chat-list > .list-item > a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

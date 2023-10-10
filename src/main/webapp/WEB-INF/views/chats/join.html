@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(~{::title},~{::link},~{})}">
+	<title th:text="${chat.title}"></title>
+	<link rel="stylesheet" th:href="@{/style/chats/join.css}">
+</head>
+<body>
+	<header th:replace="~{fragments/base :: header}"></header>
+
+	<main th:object="${chat}">
+		<div class="list chat-list">
+			<div th:replace="~{fragments/list :: chats(${user.chats}, #{chats.title})}"></div>
+		</div>
+
+		<div id="chat-header">
+			<div th:replace="~{fragments/form :: big-picture(@{ /chats/{id}/picture (id=*{id}) })}"></div>
+			<h2 class="chat-title" th:text="*{title}"></h2>
+			<div class="members-count" th:text="#{chat.members(*{members.size()})}"></div>
+			<form class="join-to-chat" th:method="post" th:action="@{ /chats/{id}/join (id=*{id}) }">
+				<input type="submit" th:value="#{chat.join}">
+			</form>
+		</div>
+
+		<div id="chat-description" th:text="*{description}"></div>
+	</main>
+</body>
+</html>

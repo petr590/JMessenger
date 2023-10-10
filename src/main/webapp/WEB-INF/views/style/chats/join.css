@@ -1,0 +1,32 @@
+@import 'common.css';
+@import 'header.css';
+
+main {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto 1fr;
+	
+	grid-template-areas:
+			'chat-list header'
+			'chat-list description';
+	
+	background-color: var(--border-color);
+	grid-gap: 1px;
+}
+
+main > * {
+	background-color: var(--background-color);
+}
+
+.chat-list {
+	grid-area: chat-list;
+}
+
+#chat-header {
+	grid-area: header;
+}
+
+#chat-description {
+	grid-area: description;
+	padding: 2em;
+}

@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://thymeleaf.org">
-<head th:replace="~{base :: head(_,~{},~{})}"></head>
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(_,~{},~{})}"></head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
 	<main>
 		<form class="centered-form" th:method="post" th:action="@{/register}" th:object="${user}">
-			<h3>Зарегистрироваться</h3>
+			<h3 th:text="#{register.title}"></h3>
 
-			<input th:field="*{username}" th:errorclass="error"
-			       type="text" placeholder="Логин">
+			<div th:replace="~{fragments/form :: username-input}"></div>
+			<div th:replace="~{fragments/form :: password-input}"></div>
+			<div th:replace="~{fragments/form :: repeated-password-input}"></div>
 
-			<input th:field="*{password}" th:errorclass="error"
-			       type="password" placeholder="Пароль">
+			<div th:replace="~{fragments/form :: submit}"></div>
 
-			<input th:field="*{repeatedPassword}" th:errorclass="error"
-			       type="password" placeholder="Повторите пароль">
+			<div th:replace="~{fragments/form :: all-errors}"></div>
 
-			<input type="submit" value="Готово">
-
-			<div th:if="${#fields.hasErrors('*')}">
-				<div class="error" th:each="error : ${#fields.errors('*')}" th:text="${error}">Input is incorrect</div>
-			</div>
-
-			<p class="small">Уже есть аккаунт? <a href="/login">Войти</a></p>
+			<p class="small">
+				[[#{register.alreadyHaveAccount}]]
+				<a th:href="@{/login}" th:text="#{register.login}"></a>
+			</p>
 		</form>
 	</main>
 </body>

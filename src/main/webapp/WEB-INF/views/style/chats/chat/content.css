@@ -1,0 +1,46 @@
+#chat-content {
+	grid-area: content;
+
+	padding: 1em;
+	overflow: auto;
+	
+	display: flex;
+	flex-flow: column nowrap;
+	
+	position: relative;
+}
+
+#chat-content:empty {
+	align-items: center;
+	justify-content: center;
+}
+
+#chat-content:empty::before {
+	content: var(--empty-chat-content-message);
+	font-style: italic;
+}
+
+#chat-content[data-loading]:empty::before {
+	content: var(--loading-message);
+}
+
+#chat-content.drag::after {
+	content: var(--send-file-message);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	font-size: var(--big-font-size);
+	font-weight: bold;
+	
+	position: absolute;
+	z-index: 1;
+	top: var(--drag-top, 0);
+	left: 0; right: 0;
+	height: 100%;
+	
+	background-color: rgba(0, 0, 0, 0.5);
+	outline: white dashed 0.2em;
+	outline-offset: -0.3em;
+}

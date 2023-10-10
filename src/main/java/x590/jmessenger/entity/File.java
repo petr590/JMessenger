@@ -1,28 +1,86 @@
 package x590.jmessenger.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.net.URLConnection;
 import java.sql.Blob;
+import java.sql.SQLException;
 
-@Entity
-@Table(name = "images")
+@Embeddable
+@Table(name = "files")
 @Getter @Setter @ToString
 @NoArgsConstructor
-public class Image {
+public class File {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@Column(name = "file_name")
+	private String name;
 
-	@OneToOne
-	private Message message;
+	@Column(name = "file_type")
+	@JsonIgnore
+	private String contentType;
 
-	@NotNull
+	@Transient
+	@JsonIgnore
+	private MediaType mediaType;
+
+	@JsonIgnore
 	private Blob data;
 
-	public Image(@NotNull Blob data, Message message) {
-		this.data = data;
-		this.message = message;
+	public File(MultipartFile multipartFile) throws SQLException, IOException {
+		this.name = multipartFile.getOriginalFilename();
+		this.data = new SerialBlob(multipartFile.getBytes());
+
+		this.contentType = multipartFile.getContentType();
+
+		if (contentType == null) {
+			contentType = URLConnection.guessContentTypeFromStream(data.getBinaryStream());
+		}
+	}
+
+	public MediaType getType() {
+		var mediaType = this.mediaType;
+
+		if (mediaType != null) {
+			return mediaType;
+		}
+
+		return this.mediaType = MediaType.byContentType(contentType);
+	}
+
+	@AllArgsConstructor
+	public enum MediaType {
+		IMAGE("image/"),
+		AUDIO("audio/"),
+		VIDEO("video/"),
+		OTHER("");
+
+		private static final MediaType[] VALUES = values();
+
+		private final String beginning;
+
+		private final String jsonValue = name().toLowerCase();
+
+		@JsonValue
+		public String jsonValue() {
+			return jsonValue;
+		}
+
+		public static MediaType byContentType(String contentType) {
+			if (contentType != null) {
+				for (var mediaType : VALUES) {
+					if (contentType.startsWith(mediaType.beginning)) {
+						return mediaType;
+					}
+				}
+			}
+
+			return OTHER;
+		}
 	}
 }

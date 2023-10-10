@@ -1,0 +1,18 @@
+<div xmlns:th="http://thymeleaf.org" th:object="${chat}"
+     class="text-data" hx-target="this" hx-swap="outerHTML">
+
+	<div th:replace="~{fragments/form :: form-textarea(
+			fieldname = 'description',
+			placeholder = #{form.chat.description},
+			autofocus = true
+	)}"></div>
+
+	<button class="done-button" th:hx-patch="@{ /chats/{id}/description (id=*{id}) }"
+	        hx-encoding="multipart/form-data" hx-include="previous [name=description]"
+	        hx-trigger="click, keydown[key == 'Enter'] from:previous [name=description]"></button>
+
+	<button class="cancel-button" th:hx-get="@{ /chats/{id}/description (id=*{id}) }"
+	        hx-trigger="click, keydown[key == 'Escape'] from:previous [name=description]"></button>
+
+	<div th:replace="~{fragments/form :: all-errors}"></div>
+</div>

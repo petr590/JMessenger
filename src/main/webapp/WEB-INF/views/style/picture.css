@@ -1,0 +1,53 @@
+.picture {
+	width: 2em;
+	height: 2em;
+	
+	border-radius: 25%;
+	overflow: hidden;
+}
+
+.picture > img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+}
+
+.big-picture {
+	font-size: 200%;
+}
+
+.large-picture {
+	font-size: 500%;
+}
+
+.uploadable-picture {
+	position: relative;
+}
+
+.uploadable-picture:hover {
+	cursor: pointer;
+}
+
+.uploadable-picture:hover::before,
+.uploadable-picture:hover::after {
+	display: block;
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+}
+
+.uploadable-picture:hover::before {
+	content: '';
+	background-color: black;
+	opacity: 0.4;
+}
+
+.uploadable-picture:hover::after {
+	height: max-content;
+	margin: auto 0;
+	padding: 0.8rem;
+	text-align: center;
+	
+	content: var(--picture-change-message);
+	color: white;
+	font-size: 1rem;
+}

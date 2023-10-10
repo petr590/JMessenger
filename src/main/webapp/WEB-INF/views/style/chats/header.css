@@ -1,0 +1,35 @@
+#chat-header {
+	padding: 1.5em;
+	
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	grid-template-areas:
+			'picture title join-to-chat'
+			'picture members-count join-to-chat';
+	
+	grid-gap: 1em;
+}
+
+#chat-header .picture {
+	grid-area: picture;
+}
+
+#chat-header .chat-title {
+	grid-area: title;
+}
+
+.chat-title {
+	max-width: 100%;
+	margin: 0;
+	
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.members-count {
+	grid-area: members-count;
+}
+
+.join-to-chat {
+	grid-area: join-to-chat;
+}

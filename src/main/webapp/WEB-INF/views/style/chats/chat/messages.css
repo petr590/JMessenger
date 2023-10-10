@@ -1,0 +1,172 @@
+.message-wrapper {
+	--picture-size: 2.5em;
+	--picture-padding: 0.5em;
+	
+	margin: 0.15em;
+	min-width: 4em;
+	max-width: min(80%, 24rem);
+	position: relative;
+}
+
+.message-wrapper:not(.own) {
+	align-self: flex-start;
+	padding-left: calc(var(--picture-size) + var(--picture-padding));
+}
+
+.message-wrapper.own {
+	align-self: flex-end;
+}
+
+
+.message-wrapper > .picture {
+	position: absolute;
+	top: 0; left: 0;
+	width: var(--picture-size);
+	height: var(--picture-size);
+}
+
+
+.message {
+	--vertical-padding: 0.75em;
+	--horizontal-padding: 1em;
+	--gap: 0.25em;
+	
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	gap: var(--gap);
+	
+	background-color: var(--light-color);
+	color: var(--text-color-on-background);
+	
+	border-radius: 1em;
+	overflow: hidden;
+}
+
+.message > * {
+	padding: 0 var(--horizontal-padding);
+}
+
+.message > :first-child {
+	padding-top: var(--vertical-padding);
+}
+
+.message > :last-child {
+	padding-bottom: var(--vertical-padding);
+}
+
+.message-wrapper.own .message {
+	text-align: right;
+	align-items: flex-end;
+}
+
+.message-wrapper.first .message {
+	border-radius: 0 1em 1em 1em;
+}
+
+.message-wrapper.first.own .message {
+	border-radius: 1em 0 1em 1em;
+}
+
+.message-author {
+	color: var(--username-text-color);
+	font-weight: bold;
+	font-size: var(--smaller-font-size);
+}
+
+.message-text {
+	margin: 0;
+	font-size: 125%;
+	max-width: 100%;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+.message-time {
+	font-size: var(--small-font-size);
+	color: var(--notice-color);
+	order: 1; /* Всегда в конце */
+}
+
+.message .message-media-file {
+	display: block;
+	width: 100%;
+	padding: 0;
+	background-color: #CCC;
+}
+
+
+.message.image {
+	position: relative;
+	border: 1px solid var(--image-border-color);
+}
+
+.message.image .message-time {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.message.image .message-file {
+	cursor: pointer;
+}
+
+
+.message-date {
+	text-align: center;
+	font-size: var(--small-font-size);
+	margin: 0.5em;
+}
+
+.message-date:first-letter {
+	text-transform: uppercase;
+}
+
+
+.message-reply-icon {
+	display: block;
+	width: 1rem;
+	height: 1rem;
+}
+
+.message-reply-icon::before {
+	display: block;
+	filter: var(--on-background-color-filter);
+	content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="inherit" d="m4 4h4v12h12l-6-6 3-3 11 11-11 11-3-3 6-6H8q-4 0-4-4"/></svg>');
+	font-style: italic;
+}
+
+
+.message-reply {
+	background-color: var(--dark-color);
+	text-align: unset;
+	padding: var(--vertical-padding) var(--horizontal-padding);
+	margin-bottom: calc(var(--vertical-padding) - var(--gap));
+	
+	display: grid;
+	column-gap: 0.5rem;
+	grid-template-areas:
+			'icon author'
+			'file file'
+			'text text';
+}
+
+.message-reply .message-reply-icon {
+	grid-area: icon;
+}
+
+.message-reply .message-author {
+	grid-area: author;
+	padding-bottom: 0.25em;
+}
+
+.message-reply .message-file {
+	grid-area: file;
+	max-width: 3rem;
+	max-height: 3rem;
+}
+
+.message-reply .message-text {
+	grid-area: text;
+}
+

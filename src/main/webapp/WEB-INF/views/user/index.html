@@ -1,24 +1,31 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://thymeleaf.org" xmlns:sec="http://thymeleaf.org">
-<head th:replace="~{base :: head(~{::title},~{::link},~{})}">
-	<title th:text="${user.username + ' - JMessenger'}">USERNAME - JMessenger</title>
-	<link rel="stylesheet" href="/style/user.css">
+<html xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/base :: head(~{::title},~{},~{::script})}">
+	<title th:text="|${user.username} - #{user.profile.title}|"></title>
+	<script defer th:src="@{/script/picture-upload.js}"></script>
 </head>
 <body>
-	<header th:replace="~{base :: header}"></header>
+	<header th:replace="~{fragments/base :: header}"></header>
 
 	<main>
-		<div class="centered-form">
-			<h3>Профиль:</h3>
+		<form class="centered-form" th:method="patch"
+		      th:action="@{/user}" th:object="${user}" enctype="multipart/form-data">
 
-			<span th:text="${user.username + ', ' + user.role.name}">USERNAME, ROLE</span>
+			<h3 th:text="#{user.profile.title}"></h3>
 
-			<a href="/user/edit">Редактировать</a>
+			<div th:replace="~{fragments/form :: uploadable-large-picture(@{ /users/{id}/picture (id=*{id}) })}"></div>
 
-			<div sec:authorize="isAuthenticated()">
-				<a href="/logout">Выйти</a>
-			</div>
-		</div>
+			<div th:replace="~{fragments/form :: username-input}"></div>
+
+			<div th:text="#{user.profile.role(*{role?.name})}"></div>
+
+			<div th:replace="~{fragments/form :: save}"></div>
+
+			<div th:replace="~{fragments/form :: all-errors}"></div>
+
+			<a th:href="@{/user/new-password}" th:text="#{user.profile.newPassword}"></a>
+			<a th:href="@{/user/delete}" th:text="#{user.profile.delete}"></a>
+		</form>
 	</main>
 </body>
 </html>

@@ -2,10 +2,13 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="HtmlFormInputWithoutLabel" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlRequiredAltAttribute" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlRequiredLangAttribute" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlRequiredTitleElement" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="18">
+          <list size="47">
             <item index="0" class="java.lang.String" itemvalue="th:action" />
             <item index="1" class="java.lang.String" itemvalue="th:method" />
             <item index="2" class="java.lang.String" itemvalue="th:href" />
@@ -24,6 +27,35 @@
             <item index="15" class="java.lang.String" itemvalue="th:replace" />
             <item index="16" class="java.lang.String" itemvalue="th:with" />
             <item index="17" class="java.lang.String" itemvalue="th:utext" />
+            <item index="18" class="java.lang.String" itemvalue="th:src" />
+            <item index="19" class="java.lang.String" itemvalue="th:style" />
+            <item index="20" class="java.lang.String" itemvalue="th:classappend" />
+            <item index="21" class="java.lang.String" itemvalue="th:for" />
+            <item index="22" class="java.lang.String" itemvalue="th:id" />
+            <item index="23" class="java.lang.String" itemvalue="th:type" />
+            <item index="24" class="java.lang.String" itemvalue="th:unless" />
+            <item index="25" class="java.lang.String" itemvalue="layout:fragment" />
+            <item index="26" class="java.lang.String" itemvalue="layout:replace" />
+            <item index="27" class="java.lang.String" itemvalue="layout:decorator" />
+            <item index="28" class="java.lang.String" itemvalue="layout:include" />
+            <item index="29" class="java.lang.String" itemvalue="layout:decorate" />
+            <item index="30" class="java.lang.String" itemvalue="th:placeholder" />
+            <item index="31" class="java.lang.String" itemvalue="th:onsubmit" />
+            <item index="32" class="java.lang.String" itemvalue="th:inline" />
+            <item index="33" class="java.lang.String" itemvalue="th:title" />
+            <item index="34" class="java.lang.String" itemvalue="th:attr" />
+            <item index="35" class="java.lang.String" itemvalue="hx-patch" />
+            <item index="36" class="java.lang.String" itemvalue="th:hx-patch" />
+            <item index="37" class="java.lang.String" itemvalue="th:hx-swap" />
+            <item index="38" class="java.lang.String" itemvalue="th:hx-trigger" />
+            <item index="39" class="java.lang.String" itemvalue="hx-trigger" />
+            <item index="40" class="java.lang.String" itemvalue="hx-swap" />
+            <item index="41" class="java.lang.String" itemvalue="hx-target" />
+            <item index="42" class="java.lang.String" itemvalue="hx-get" />
+            <item index="43" class="java.lang.String" itemvalue="th:hx-get" />
+            <item index="44" class="java.lang.String" itemvalue="hx-include" />
+            <item index="45" class="java.lang.String" itemvalue="hx-encoding" />
+            <item index="46" class="java.lang.String" itemvalue="th:autofocus" />
           </list>
         </value>
       </option>

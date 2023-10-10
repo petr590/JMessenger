@@ -1,0 +1,29 @@
+.list {
+	display: flex;
+	flex-flow: column nowrap;
+	height: 100%;
+}
+
+.list-item, .menu-item {
+	margin: 0;
+	padding: 1em;
+}
+
+.menu-item {
+	display: block;
+}
+
+.list-item {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+	border-bottom: 1px solid var(--border-color) !important;
+}
+
+.list-item-wrapper > .list-item {
+	width: 100%;
+}
+
+.list-title {
+	text-align: center;
+}
